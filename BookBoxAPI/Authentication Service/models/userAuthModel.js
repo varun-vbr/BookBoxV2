@@ -32,18 +32,15 @@ const userAuthSchema = new mongoose.Schema({
   passwordResetExpires: {type : Date, select: false},
   active: {
     type: Boolean,
-    default: true,
-    select: false
+    default: true
   },
   admin: {
     type: Boolean,
-    default: false,
-    select: false
+    default: false
   },
   root: {
     type: Boolean,
-    default: false,
-    select: false
+    default: false
   },
   adminType: {
     type: mongoose.Schema.ObjectId,

@@ -9,7 +9,7 @@ const factory = require('./handlerFactory');
 const axios = require('axios');
 
 exports.isLoggedIn = catchAsync(async (req, res, next) => {
-    const cookie = req.cookies.jwt;
+    const cookie = req.cookies.jwt ? req.cookies.jwt : req.body.headers.Cookie.jwt;
     if(cookie){
         try{
             const response = await axios.get('http://localhost:3000/api/v1/users/auth/isLoggedIn', {
@@ -39,32 +39,61 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
   });
   
 exports.signup =  catchAsync(async (req, res, next) => {
-    const newUser = await UserDetails.create({userId : req.body.userId, name : req.body.name, email : req.body.email, plan : req.body.plan});
-    try{
-            const response = await axios.post('http://localhost:3000/api/v1/users/auth/signUp', {
+    const newUser = await UserDetails.create({userId : req.body.data.userId, name : req.body.data.name, email : req.body.data.email, plan : req.body.data.plan});
+    let newUserPopulated = await UserDetails.findOne({ userId : newUser.userId }).populate('plan');
+    var response = {};
+    try{    
+        if(req.body.data.admin || req.body.data.root){
+            response = await axios.post('http://localhost:3000/api/v1/users/auth/admin', {
                 data : {
-                    userId : req.body.userId,
-                    password : req.body.password,
-                    passwordConfirm : req.body.passwordConfirm
+                        userId : req.body.data.userId,
+                        password : req.body.data.password,
+                        passwordConfirm : req.body.data.passwordConfirm,
+                        admin : req.body.data.admin,
+                        root : req.body.data.root,
+                        adminType : req.body.data.adminType
+                    },
+                headers: {
+                    Cookie: req.body.headers.Cookie                
                 }
             });
             if(response.status != 201) {
+                const delUser = await UserDetails.findOneAndRemove({ userId : newUser.userId});
                 return next(
                     new AppError('There was an error saving user credentials', response.status)
                 );
             }
+        }
+        else{
+            response = await axios.post('http://localhost:3000/api/v1/users/auth/signUp', {
+                data : {
+                    userId : req.body.data.userId,
+                    password : req.body.data.password,
+                    passwordConfirm : req.body.data.passwordConfirm
+                }
+            });
+            if(response.status != 201) {
+                const delUser = await UserDetails.findOneAndRemove({ userId : newUser.userId});
+                return next(
+                    new AppError('There was an error saving user credentials', response.status)
+                );
+            }
+        }
+        res.status(201).json({
+            status: 'success',
+            data: {
+                userDetail : newUserPopulated,
+                userAuth :  response.data.data.user,
+                token :  response.data.data.token
+            }
+          });
         } 
         catch(e){
+            const delUser = await UserDetails.findOneAndRemove({ userId : newUser.userId});
             return next(
-                new AppError('There was an error saving user credentials', 500)
+                new AppError(e.response.data.message, e.response.data.error.statusCode)
             ); 
         }
-    res.status(201).json({
-        status: 'success',
-        data: {
-          newUser
-        }
-      });
 });
 
 exports.getUserDetailsByEmail = catchAsync(async (req, res, next) => {
@@ -100,7 +129,7 @@ exports.getUserDetails = catchAsync(async (req, res, next) => {
 })
   
 exports.updateUser = catchAsync(async (req, res, next) => {
-    const plan = await Plan.findOne({ planName : req.body.planName });
+    const plan = await Plan.findOne({ planName : req.body.data.planName });
     if(plan){
         await UserDetails.findOneAndUpdate({userId: res.locals.userId}, {plan});
         res.status(200).json({

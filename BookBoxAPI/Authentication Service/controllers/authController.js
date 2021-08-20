@@ -30,14 +30,12 @@ const createSendToken = (user, statusCode, req, res) => {
 
   // Remove hidden fields from output
   user.password = undefined;
-  user.admin = undefined;
-  user.root = undefined;
-  user.active = undefined;
+  user.token = token;
   
   res.status(statusCode).json({
     status: 'success',
-    token,
     data: {
+      token,
       user
     }
   });
@@ -45,27 +43,28 @@ const createSendToken = (user, statusCode, req, res) => {
 
 exports.signup =  catchAsync(async (req, res, next) => {
   const newUser = await UserAuth.create(req.body.data);
-  createSendToken(newUser, 201, req, res);
+  const newUserPopulated = await UserAuth.findOne({ userId : newUser.userId }).populate('adminType').select('+password');
+  createSendToken(newUserPopulated, 201, req, res);
  });
 
 exports.login = catchAsync(async (req, res, next) => {
-  const  password  = req.body.password;
-  let userId = -1;
+  const  password  = req.body.data.password;
+  const userId = req.body.data.userId;
   
-  try{
-      const response = await axios.get('http://localhost:3001/api/v1/users/register/user/'+req.body.email);
-      if(response.status != 200) {
-          return next(
-              new AppError('Invalid Email Address', response.status)
-          );
-      } 
-      userId = response.data.data.userDetail.userId;
-  } 
-  catch(e){
-      return next(
-          new AppError('There was an error logging in', 500)
-      ); 
-  }
+  // try{
+  //     const response = await axios.get('http://localhost:3001/api/v1/users/register/user/'+req.body.email);
+  //     if(response.status != 200) {
+  //         return next(
+  //             new AppError('Invalid Email Address', response.status)
+  //         );
+  //     } 
+  //     userId = response.data.data.userDetail.userId;
+  // } 
+  // catch(e){
+  //     return next(
+  //         new AppError('There was an error logging in', 500)
+  //     ); 
+  // }
   // 1) Check if email and password exist
   if (!userId || !password) {
     return next(new AppError('Please provide email and password!', 400));
@@ -82,7 +81,7 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.createAdmin = catchAsync(async (req, res, next) => {
-  const newUser = await UserAuth.create(req.body);
+  const newUser = await UserAuth.create(req.body.data);
   const newUserPopulated = await UserAuth.findOne({ userId : newUser.userId }).populate('adminType').select('+password');
   createSendToken(newUserPopulated, 201, req, res);
  });
@@ -120,9 +119,12 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
-  } else if (req.cookies.jwt) {
+  }else if(req.cookies.jwt) {
     token = req.cookies.jwt;
-  }
+  }else {
+    token = req.body.headers.Cookie.jwt;
+  } 
+  
 
   if (!token) {
     return next(
@@ -158,11 +160,11 @@ exports.protect = catchAsync(async (req, res, next) => {
 });
 
 exports.isUserloggedIn = async (req, res, next) => {
-  if (req.cookies.jwt) {
+  if (req.body.headers.Cookie.jwt) {
     try {
       // 1) verify token
       const decoded = await promisify(jwt.verify)(
-        req.cookies.jwt,
+        req.body.headers.Cookie.jwt,
         process.env.JWT_SECRET
       );
 
@@ -217,11 +219,12 @@ exports.restrictTo = () => {
 
 // Only for rendered pages, no errors!
 exports.isLoggedIn = catchAsync(async (req, res, next) => {
-  if (req.cookies.jwt) {
+  let token = req.body.headers ? req.body.headers.Cookie.jwt : req.cookies.jwt; 
+  if (token) {
     try {
       // 1) verify token
       const decoded = await promisify(jwt.verify)(
-        req.cookies.jwt,
+        token,
         process.env.JWT_SECRET
       );
 
@@ -338,7 +341,7 @@ exports.delete = catchAsync(async (req, res, next) => {
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
   // 1) Get user from collection
-  const user = await UserAuth.findById(req.user.id).select('+password');
+  const user = await UserAuth.findById(res.locals.user._id).select('+password');
 
   // 2) Check if POSTed current password is correct
   if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
