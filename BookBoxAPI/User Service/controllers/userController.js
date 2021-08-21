@@ -220,7 +220,7 @@ exports.update = catchAsync(async (req, res, next) => {
       }
       user.playlists.push(playlist._id);
       await user.save();
-      res.status(200).json({
+      res.status(201).json({
         status: 'success',
         data: {
             user
