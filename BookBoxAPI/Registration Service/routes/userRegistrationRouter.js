@@ -7,6 +7,6 @@ router.get('/user/:email', registrationController.getUserDetailsByEmail);
 router.use(registrationController.isLoggedIn);
 router.get('/user', registrationController.getUserDetails);
 router.patch('/update', registrationController.updateUser);
-
+router.get('/users/:userId', registrationController.findUserById);
 
 module.exports = router;

@@ -20,7 +20,11 @@ router.get('/isLoggedIn', authController.isLoggedIn);
 router.patch('/updatePassword', authController.updatePassword);
 router.delete('/delete', authController.delete);
 router.post('/adminType', authController.createAdminType);
-
+router.get('/userAdmin', authController.isUserAdmin, authController.hasUserAdminPrevilege);
+router.get('/bookAdmin', authController.isUserAdmin, authController.hasBookAdminPrevilege);
+router.get('/supportAdmin', authController.isUserAdmin, authController.isUserSupportAdmin);
+router.get('/rootAdmin', authController.isUserAdmin, authController.isRoot);
+router.get('/user/:userId', authController.isUserAdmin, authController.findUserById);
 //router.use(authController.restrictTo('admin'));
 
 module.exports = router;

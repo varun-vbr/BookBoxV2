@@ -4,7 +4,7 @@ const validator = require('validator');
 const userReviewModel = new mongoose.Schema({
     userId : {
         type: Number,
-        required: [true, 'Playlist Id is required'],
+        required: [true, 'User Id is required'],
         index: true
     },
     userName : {

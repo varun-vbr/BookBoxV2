@@ -14,17 +14,17 @@ exports.signup =  catchAsync(async (req, res, next) => {
        const response = await axios.post('http://localhost:3001/api/v1/users/register/signup', {
             data : {
                 userId : newUser.userId,
-                name : req.body.name, 
-                email : req.body.email, 
-                plan : req.body.plan,
-                admin : req.body.admin,
-                root : req.body.root,
-                adminType : req.body.adminType,
-                password : req.body.password,
-                passwordConfirm : req.body.passwordConfirm
+                name : req.body.name ? req.body.name : req.body.data.name, 
+                email : req.body.email ? req.body.email : req.body.data.email, 
+                plan : req.body.plan ? req.body.plan : req.body.data.plan,
+                admin : req.body.admin ? req.body.admin : req.body.data.admin,
+                root : req.body.root ? req.body.root : req.body.data.root,
+                adminType : req.body.adminType ? req.body.adminType : req.body.data.adminType,
+                password : req.body.password ? req.body.password : req.body.data.password,
+                passwordConfirm : req.body.passwordConfirm ? req.body.passwordConfirm : req.body.data.passwordConfirm,
             },
             headers: {
-                Cookie: req.cookies
+                Cookie: req.cookies.jwt ? req.cookies : req.body.headers.Cookie
             }
         });
         if(response.status != 201) {
@@ -33,13 +33,15 @@ exports.signup =  catchAsync(async (req, res, next) => {
                 new AppError('There was an error saving user credentials', response.status)
             );
         }
-        res.cookie('jwt', response.data.data.token, {
-            expires: new Date(
-              Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-            ),
-            httpOnly: true,
-            secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
-        });
+        if(!req.body.admin){
+            res.cookie('jwt', response.data.data.token, {
+                expires: new Date(
+                  Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+                ),
+                httpOnly: true,
+                secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
+            });
+        }
         res.status(201).json({
             status: 'success',
             token :  response.data.data.token,
@@ -191,6 +193,11 @@ exports.update = catchAsync(async (req, res, next) => {
         const response = await axios.patch('http://localhost:3000/api/v1/users/auth/updatePassword', {
                     headers: {
                         Cookie: req.cookies
+                    },
+                    data : {
+                        passwordCurrent : req.body.passwordCurrent, 
+                        password : req.body.password, 
+                        passwordConfirm : req.body.passwordConfirm
                     }
         });
         if(response.status != 200) {
@@ -232,7 +239,7 @@ exports.update = catchAsync(async (req, res, next) => {
             new AppError(e.response.data.message, 500)
         ); 
     }
-  })
+  });
 
   exports.addPlaylistBook = catchAsync(async (req, res, next) => {
     try{
@@ -256,7 +263,7 @@ exports.update = catchAsync(async (req, res, next) => {
             new AppError(e.response.data.message, 500)
         );
     }  
-  })
+  });
 
   exports.removePlaylistBook = catchAsync(async (req, res, next) => {
     try{
@@ -285,7 +292,7 @@ exports.update = catchAsync(async (req, res, next) => {
             new AppError(e.response.data.message, 500)
         );
     }
-  })
+  });
 
   exports.addWishlistBook = catchAsync(async (req, res, next) => {
     try{
@@ -309,7 +316,7 @@ exports.update = catchAsync(async (req, res, next) => {
             new AppError(e.message, 500)
         );
     }  
-  })
+  });
 
   exports.removeWishlistBook = catchAsync(async (req, res, next) => {
     try{
@@ -337,7 +344,7 @@ exports.update = catchAsync(async (req, res, next) => {
             new AppError(e.response.data.message, 500)
         );
     }
-  })
+  });
 
   exports.addPfdCategory = catchAsync(async (req, res, next) => {
     try{
@@ -361,7 +368,7 @@ exports.update = catchAsync(async (req, res, next) => {
             new AppError(e.response.data.message, 500)
         );
     }  
-  })
+  });
 
   exports.removePfdCategory = catchAsync(async (req, res, next) => {
     try{
@@ -389,4 +396,34 @@ exports.update = catchAsync(async (req, res, next) => {
             new AppError(e.response.data.message, 500)
         );
     }
+  });
+
+  exports.findUserById =  catchAsync(async (req, res, next) => {
+    try{
+        const userPrefs = await UserPref.findOne({userId : req.params.userId});
+
+        if(!userPrefs){
+          return next(new AppError('There are no users by this Id', 404));
+        }
+        response = await axios.get('http://localhost:3001/api/v1/users/register/users/'+req.params.userId, {
+            headers: {
+                Cookie: req.cookies.jwt                
+            }
+        });
+        if(response.status != 200) {
+            return next(
+                new AppError('There was an error finding user auth details', response.status)
+            );
+        }
+        res.status(200).json({
+          status: 'success',
+          data: {
+            userDetail : response.data.data.userDetail,
+            userAuth :  response.data.data.userAuth,
+            userPrefs
+          }
+        });
+      } catch(e){
+          return next(new AppError(e.response.data.message, e.response.status));
+      }
   })

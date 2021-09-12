@@ -9,7 +9,16 @@ const factory = require('./handlerFactory');
 const axios = require('axios');
 
 exports.isLoggedIn = catchAsync(async (req, res, next) => {
-    const cookie = req.cookies.jwt ? req.cookies.jwt : req.body.headers.Cookie.jwt;
+    let cookie = '';
+    if(req.cookies.jwt){
+        cookie = req.cookies.jwt;
+    }else if(req.body.headers){
+        cookie = req.body.headers.Cookie.jwt;
+    }
+    else{
+        cookie = req.headers.cookie;
+    }
+        
     if(cookie){
         try{
             const response = await axios.get('http://localhost:3000/api/v1/users/auth/isLoggedIn', {
@@ -141,6 +150,35 @@ exports.updateUser = catchAsync(async (req, res, next) => {
         );
     }
     
+  });
+
+  exports.findUserById =  catchAsync(async (req, res, next) => {
+    try{
+        const userDetail = await UserDetails.findOne({userId : req.params.userId}).populate('plan');
+
+        if(!userDetail){
+          return next(new AppError('There are no users by this Id', 404));
+        }
+        response = await axios.get('http://localhost:3000/api/v1/users/auth/user/'+req.params.userId, {
+            headers: {
+                Cookie: "jwt=" + req.headers.cookie + ";"                
+            }
+        });
+        if(response.status != 200) {
+            return next(
+                new AppError('There was an error finding user auth details', response.status)
+            );
+        }
+        res.status(200).json({
+          status: 'success',
+          data: {
+            userDetail,
+            userAuth :  response.data.data.userAuth
+          }
+        });
+      } catch(e){
+          return next(new AppError(e.response.data.message, e.response.status));
+      }
   });
   
   

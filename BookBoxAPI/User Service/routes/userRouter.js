@@ -16,6 +16,6 @@ router.patch('/wishlist', userController.addWishlistBook);
 router.put('/wishlist', userController.removeWishlistBook);
 router.patch('/pfdcatagory', userController.addPfdCategory);
 router.put('/pfdcatagory', userController.removePfdCategory);
-
+router.get('/:userId', userController.findUserById);
 
 module.exports = router;

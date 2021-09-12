@@ -87,7 +87,7 @@ exports.createAdmin = catchAsync(async (req, res, next) => {
  });
 
 exports.createAdminType = catchAsync(async (req, res, next) => {
-  const newAdminType = await AdminType.create(req.body);
+  const newAdminType = await AdminType.create(req.body.data);
   res.status(201).json({
     status: 'success',
     data: {
@@ -121,8 +121,10 @@ exports.protect = catchAsync(async (req, res, next) => {
     token = req.headers.authorization.split(' ')[1];
   }else if(req.cookies.jwt) {
     token = req.cookies.jwt;
-  }else {
+  }else if(req.body.headers) {
     token = req.body.headers.Cookie.jwt;
+  }else {
+    token = req.headers.Cookie.jwt;
   } 
   
 
@@ -190,10 +192,23 @@ exports.isUserloggedIn = async (req, res, next) => {
 };
 
 exports.isUserAdmin = async (req, res, next) => {
-     if(!res.locals.user && (!res.locals.user.admin || !res.locals.user.root))
+     if(res.locals.user && !(res.locals.user.admin || res.locals.user.root))
           return next(new AppError('You do not have permission to perform this action', 403));
     next();
 };
+
+exports.isUserSupportAdmin = async (req, res, next) => {
+  try{
+    const adminType  = await AdminType.findById(req.user.adminType._id);
+    if(adminType.userSupportRoleGranted || req.user.root){
+      res.status(200).json({ status: 'success' });
+    } else{
+      return next(new AppError('You do not have permission to perform this action', 403));
+    }
+  }catch(e){
+    return next(new AppError('There was an error fetching the Admin Type', 500));
+  }
+}
 
 exports.restrictTo = () => {
   return (req, res, next) => {
@@ -344,16 +359,71 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   const user = await UserAuth.findById(res.locals.user._id).select('+password');
 
   // 2) Check if POSTed current password is correct
-  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+  if (!(await user.correctPassword(req.body.data.passwordCurrent, user.password))) {
     return next(new AppError('Your current password is wrong.', 401));
   }
 
   // 3) If so, update password
-  user.password = req.body.password;
-  user.passwordConfirm = req.body.passwordConfirm;
+  user.password = req.body.data.password;
+  user.passwordConfirm = req.body.data.passwordConfirm;
   await user.save();
   // User.findByIdAndUpdate will NOT work as intended!
 
   // 4) Log user in, send JWT
   createSendToken(user, 200, req, res);
+});
+
+exports.hasUserAdminPrevilege = catchAsync(async (req, res, next) => {
+  try{
+    const adminType  = await AdminType.findById(req.user.adminType._id);
+    if(adminType.userProfileAccessRW || adminType.userSupportRoleGranted || req.user.root){
+      res.status(200).json({ status: 'success' });
+    } else{
+      return next(new AppError('You do not have permission to perform this action', 403));
+    }
+  }catch(e){
+    return next(new AppError('There was an error fetching the Admin Type', 500));
+  }
+});
+
+exports.hasBookAdminPrevilege = catchAsync(async (req, res, next) => {
+  try{
+    const adminType = await AdminType.findById(req.user.adminType._id);
+    if(adminType.bookMaintenanceAccess || adminType.categoryMaintenanceAccess || req.user.root) {
+      res.status(200).json({ status: 'success' });
+    } else{
+      return next(new AppError('You do not have permission to perform this action', 403));
+    }
+  } catch(e){
+      return next(new AppError('There was an error fetching the Admin Type', 500));
+  }
+});
+
+exports.isRoot = catchAsync(async (req, res, next) => {
+  if(req.user.root){
+    res.status(200).json({ status: 'success' });
+  } else{
+    return next(new AppError('You do not have permission to perform this action', 403));
+  }
+});
+
+exports.findUserById = catchAsync(async (req, res, next) => {
+  try{
+    const userAuth = await UserAuth.findOne({userId : req.params.userId}).populate('adminType').select('+password');
+    if(!userAuth){
+      return next(new AppError('There are no users by this Id', 404));
+    }
+    if(userAuth.admin || userAuth.root){
+      return next(new AppError('You do not have permission to perform this action', 403));
+    }
+    userAuth.password = undefined;
+    res.status(200).json({
+      status: 'success',
+      data: {
+        userAuth
+      }
+    });
+  } catch(e){
+      return next(new AppError('There was an error fetching User Auth Details', 500));
+  }
 });
