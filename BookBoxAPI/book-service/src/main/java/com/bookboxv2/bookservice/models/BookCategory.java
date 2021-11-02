@@ -12,7 +12,7 @@ public class BookCategory {
     private String imagePath;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "category_id")
     public long getCategoryId() {
         return categoryId;

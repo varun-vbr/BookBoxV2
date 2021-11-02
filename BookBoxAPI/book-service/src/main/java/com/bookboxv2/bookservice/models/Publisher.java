@@ -10,7 +10,7 @@ public class Publisher {
 
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "publisher_id")
     public long getPublisherId() {
         return publisherId;

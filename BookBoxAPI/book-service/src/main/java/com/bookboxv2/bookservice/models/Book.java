@@ -1,11 +1,14 @@
 package com.bookboxv2.bookservice.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.Date;
 
 
 @Entity
 @Table(name = "tbl_books", schema = "booksdb")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Book {
 
     private long bookId;
@@ -22,7 +25,7 @@ public class Book {
     private Date uploadDate;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "book_id")
     public long getBookId() {
         return bookId;

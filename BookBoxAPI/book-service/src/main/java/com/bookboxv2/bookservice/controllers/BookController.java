@@ -3,9 +3,11 @@ package com.bookboxv2.bookservice.controllers;
 import com.bookboxv2.bookservice.models.Book;
 import com.bookboxv2.bookservice.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/books")
@@ -44,4 +46,12 @@ public class BookController {
     @ResponseBody
     public List<Book> getBooksByPublisherName(@PathVariable String publisherName){ return bookSvc.findAllBooksByPublisherName(publisherName); }
 
+    @PostMapping(path = "/new")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public void addBook(@RequestBody Map<String, Object> params){
+        bookSvc.addBook(params);
+    }
+
+    @DeleteMapping(path = "/{bookId}")
+    public void deleteBook(@PathVariable long bookId){ bookSvc.deleteBook(bookId); }
 }
