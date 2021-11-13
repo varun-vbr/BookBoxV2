@@ -1,0 +1,13 @@
+category_id,category_name,location,imagepath,book_count
+1,"Action and Adventure",/actualbooks/Action_and_Adventure,/bookCovers,0
+2,"Autobiographies and Biographies",/actualbooks/Autobiographies_and_Biographies,/bookCovers,0
+3,"Business and Economics",/actualbooks/Business_and_Economics,/bookCovers,0
+4,Computing,/actualbooks/Computing,/bookCovers,0
+5,"Healthy Living",/actualbooks/Healthy_Living,/bookCovers,0
+6,Humour,/actualbooks/Humour,/bookCovers,0
+7,"Personal Development",/actualbooks/Personal_Development,/bookCovers,0
+8,Romance,/actualbooks/Romance,/bookCovers,0
+9,"Science and Technology",/actualbooks/Science_and_Technology,/bookCovers,0
+10,"Science Fiction",/actualbooks/Science_Fiction,/bookCovers,0
+11,Sports,/actualbooks/Sports,/bookCovers,0
+12,Travel,/actualbooks/Travel,/bookCovers,0
