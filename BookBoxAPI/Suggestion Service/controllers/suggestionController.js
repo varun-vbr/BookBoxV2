@@ -80,7 +80,7 @@ exports.addPublisherPopularity = catchAsync(async (req, res, next) => {
 exports.getPopularBooks = catchAsync(async (req, res, next) => {
     try{
         const categoryId = req.params.categoryId;
-        const popularBooks = await BookPopularity.find({categoryId}).sort({cpp : 'desc'}).limit(3);
+        const popularBooks = await BookPopularity.find({categoryId}).sort({cpp : 'desc'}).limit(10);
         res.status(200).json({
             status: 'success',
             data: {
@@ -96,7 +96,7 @@ exports.getPopularBooks = catchAsync(async (req, res, next) => {
 
 exports.getMostPopularBooks = catchAsync(async (req, res, next) => {
     try{
-        const popularBooks = await BookPopularity.find().sort({cpp : 'desc'}).limit(9);
+        const popularBooks = await BookPopularity.find().sort({cpp : 'desc'}).limit(10);
         res.status(200).json({
             status: 'success',
             data: {
@@ -112,7 +112,7 @@ exports.getMostPopularBooks = catchAsync(async (req, res, next) => {
 
 exports.getTrendyBooks = catchAsync(async (req, res, next) => {
     try{
-        const trendingBooks = await BookPopularityTrend.find().sort({lastActivity : 'desc'}).limit(9);
+        const trendingBooks = await BookPopularityTrend.find().sort({lastActivity : 'desc'}).limit(10);
         res.status(200).json({
             status: 'success',
             data: {
@@ -128,7 +128,7 @@ exports.getTrendyBooks = catchAsync(async (req, res, next) => {
 
 exports.getPopularAuthors = catchAsync(async (req, res, next) => {
     try{
-        const popularAuthors = await AuthorPopularity.find().sort({cpp : 'desc'}).limit(9);
+        const popularAuthors = await AuthorPopularity.find().sort({cpp : 'desc'}).limit(10);
         res.status(200).json({
             status: 'success',
             data: {
@@ -144,7 +144,7 @@ exports.getPopularAuthors = catchAsync(async (req, res, next) => {
 
 exports.getPopularPublishers = catchAsync(async (req, res, next) => {
     try{
-        const popularPublishers = await PublisherPopularity.find().sort({cpp : 'desc'}).limit(9);
+        const popularPublishers = await PublisherPopularity.find().sort({cpp : 'desc'}).limit(10);
         res.status(200).json({
             status: 'success',
             data: {
