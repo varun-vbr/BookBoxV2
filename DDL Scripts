@@ -1,0 +1,68 @@
+CREATE TABLE `tbl_bookcategories` (
+  `category_id` int NOT NULL AUTO_INCREMENT,
+  `category_name` varchar(45) NOT NULL,
+  `location` varchar(65) NOT NULL,
+  `imagepath` varchar(45) NOT NULL,
+  `book_count` int NOT NULL DEFAULT '0',
+  PRIMARY KEY (`category_id`),
+  UNIQUE KEY `category_id_UNIQUE` (`category_id`),
+  UNIQUE KEY `category_name_UNIQUE` (`category_name`),
+  UNIQUE KEY `location_UNIQUE` (`location`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `tbl_authors` (
+  `author_id` int NOT NULL AUTO_INCREMENT,
+  `author_name` varchar(45) NOT NULL,
+  PRIMARY KEY (`author_id`),
+  UNIQUE KEY `author_id_UNIQUE` (`author_id`),
+  UNIQUE KEY `author_name_UNIQUE` (`author_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=511 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `tbl_publishers` (
+  `publisher_id` int NOT NULL AUTO_INCREMENT,
+  `publisher_name` varchar(255) NOT NULL,
+  PRIMARY KEY (`publisher_id`),
+  UNIQUE KEY `publisher_id_UNIQUE` (`publisher_id`),
+  UNIQUE KEY `publisher_name_UNIQUE` (`publisher_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=421 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `tbl_books` (
+  `book_id` int NOT NULL AUTO_INCREMENT,
+  `title` varchar(1000) NOT NULL,
+  `description` varchar(10000) NOT NULL,
+  `author` int NOT NULL,
+  `publisher` int NOT NULL,
+  `category` int NOT NULL,
+  `total_pages` int NOT NULL DEFAULT '0',
+  `average_rating` int NOT NULL DEFAULT '0',
+  `read_count` int NOT NULL DEFAULT '0',
+  `location` varchar(1000) NOT NULL,
+  `img_loc` varchar(600) NOT NULL,
+  `upload_date` timestamp(6) NULL DEFAULT NULL,
+  PRIMARY KEY (`book_id`),
+  UNIQUE KEY `book_id_UNIQUE` (`book_id`),
+  KEY `fk_tbl_books_category_idx` (`category`),
+  KEY `fk_tbl_books_publisher_idx` (`publisher`),
+  KEY `fk_tbl_books_author_idx` (`author`),
+  CONSTRAINT `fk_tbl_books_author` FOREIGN KEY (`author`) REFERENCES `tbl_authors` (`author_id`),
+  CONSTRAINT `fk_tbl_books_category` FOREIGN KEY (`category`) REFERENCES `tbl_bookcategories` (`category_id`),
+  CONSTRAINT `fk_tbl_books_publisher` FOREIGN KEY (`publisher`) REFERENCES `tbl_publishers` (`publisher_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=609 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+
+
+
+CREATE TABLE `tbl_bookreads` (
+  `book_id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `progress` int NOT NULL DEFAULT '0',
+  `last_read` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`book_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `tbl_book_downloads` (
+  `book_id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `download_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`book_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
