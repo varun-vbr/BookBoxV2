@@ -8,7 +8,7 @@ import java.io.Serializable;
 @RedisHash("Book")
 public class Book implements Serializable {
     private long bookId;
-    private String bookName;
+    private String title;
 
     @Id
     public long getBookId() {
@@ -20,10 +20,10 @@ public class Book implements Serializable {
     }
 
     public String getBookName() {
-        return bookName;
+        return title;
     }
 
-    public void setBookName(String bookName) {
-        this.bookName = bookName;
+    public void setTitle(String bookName) {
+        this.title = bookName;
     }
 }
