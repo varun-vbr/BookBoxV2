@@ -19,7 +19,7 @@ public class Book implements Serializable {
         this.bookId = bookId;
     }
 
-    public String getBookName() {
+    public String getTitle() {
         return title;
     }
 

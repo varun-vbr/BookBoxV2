@@ -6,10 +6,10 @@ import com.bookboxv2.booksearchservice.feignclients.BookSuggestionClient;
 import com.bookboxv2.booksearchservice.models.Author;
 import com.bookboxv2.booksearchservice.models.Book;
 import com.bookboxv2.booksearchservice.models.Publisher;
-import com.bookboxv2.booksearchservice.repositories.AuthorRepository;
-import com.bookboxv2.booksearchservice.repositories.BookRepository;
-import com.bookboxv2.booksearchservice.repositories.PublisherRepository;
+import com.bookboxv2.booksearchservice.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +17,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.contains;
 
 @Service
 public class SuggestionService {
@@ -66,21 +69,30 @@ public class SuggestionService {
     public Object performSearch(String type, String key){
         try{
             if(type.equalsIgnoreCase("book")){
-                 List<Book> books = bookRepository.findAllByTitleIgnoreCaseContaining(key);
+                 List<Book> books = ((List<Book>) bookRepository.findAll()).
+                         stream().
+                         filter(book -> book.getTitle().contains(key)).
+                         collect(Collectors.toList());
                  if(books.size() < 5){
                     return bookClient.getBooksByTitle(key);
                  } else{
                      return books;
                  }
             } else if(type.equalsIgnoreCase("author")){
-                 List<Author> authors = authorRepository.findAllByAuthorNameIgnoreCaseContaining(key);
+                 List<Author> authors = ((List<Author>) authorRepository.findAll()).
+                         stream().
+                         filter(author -> author.getAuthorName().contains(key)).
+                         collect(Collectors.toList());
                  if(authors.size() < 5){
                      return bookClient.getAuthorsByTitle(key);
                  } else{
                      return authors;
                  }
             } else if(type.equalsIgnoreCase("publisher")){
-                List<Publisher> publishers = publisherRepository.findAllByPublisherNameIgnoreCaseContaining(key);
+                List<Publisher> publishers = ((List<Publisher>) publisherRepository.findAll()).
+                        stream().
+                        filter(publisher -> publisher.getPublisherName().contains(key)).
+                        collect(Collectors.toList());
                 if(publishers.size() < 5){
                     return bookClient.getPublishersByTitle(key);
                 } else{
@@ -107,7 +119,7 @@ public class SuggestionService {
             Map<String, Object> bookMap = bookClient.getBooksById(bookId);
             Book book = new Book();
             book.setBookId(Long.valueOf((Integer)bookMap.get("bookId")));
-            book.setTitle((String)bookMap.get(("title")));
+            book.setTitle((String)bookMap.get("title"));
             return book;
         } catch(Exception ex){
             throw new AppError(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value(), false);
