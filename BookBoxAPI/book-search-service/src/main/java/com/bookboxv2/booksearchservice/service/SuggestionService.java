@@ -68,36 +68,36 @@ public class SuggestionService {
 
     public Object performSearch(String type, String key){
         try{
-            if(type.equalsIgnoreCase("book")){
-                 List<Book> books = ((List<Book>) bookRepository.findAll()).
-                         stream().
-                         filter(book -> book.getTitle().contains(key)).
-                         collect(Collectors.toList());
-                 if(books.size() < 5){
-                    return bookClient.getBooksByTitle(key);
-                 } else{
-                     return books;
-                 }
+           if(type.equalsIgnoreCase("book")) {
+//                 List<Book> books = ((List<Book>) bookRepository.findAll()).
+//                         stream().
+//                         filter(book -> book.getTitle().contains(key)).
+//                         collect(Collectors.toList());
+//                 if(books.size() < 5){
+               return bookClient.getBooksByTitle(key);
+//                 } else{
+//                     return books;
+//           }
             } else if(type.equalsIgnoreCase("author")){
-                 List<Author> authors = ((List<Author>) authorRepository.findAll()).
-                         stream().
-                         filter(author -> author.getAuthorName().contains(key)).
-                         collect(Collectors.toList());
-                 if(authors.size() < 5){
+//                 List<Author> authors = ((List<Author>) authorRepository.findAll()).
+//                         stream().
+//                         filter(author -> author.getAuthorName().contains(key)).
+//                         collect(Collectors.toList());
+//                 if(authors.size() < 5){
                      return bookClient.getAuthorsByTitle(key);
-                 } else{
-                     return authors;
-                 }
+//                 } else{
+//                     return authors;
+//                 }
             } else if(type.equalsIgnoreCase("publisher")){
-                List<Publisher> publishers = ((List<Publisher>) publisherRepository.findAll()).
-                        stream().
-                        filter(publisher -> publisher.getPublisherName().contains(key)).
-                        collect(Collectors.toList());
-                if(publishers.size() < 5){
+//                List<Publisher> publishers = ((List<Publisher>) publisherRepository.findAll()).
+//                        stream().
+//                        filter(publisher -> publisher.getPublisherName().contains(key)).
+//                        collect(Collectors.toList());
+//                if(publishers.size() < 5){
                     return bookClient.getPublishersByTitle(key);
-                } else{
-                    return publishers;
-                }
+//                } else{
+//                    return publishers;
+//                }
             } else{
                 throw new AppError("Invalid search type. Supported types:book, author, publisher", HttpStatus.BAD_REQUEST.value(), true);
             }
