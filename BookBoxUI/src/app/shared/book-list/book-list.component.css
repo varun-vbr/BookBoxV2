@@ -1,0 +1,33 @@
+.title {
+  color: rgba(250, 137, 9, 0.904);
+  text-decoration: none;
+  font-weight: bold;
+  font-size: x-large;
+}
+.author {
+  color: rgba(250, 137, 9, 0.904);
+  text-decoration: none;
+  font-size: medium;
+}
+.publisher {
+  color: rgba(250, 137, 9, 0.904);
+  text-decoration: none;
+  font-size: medium;
+}
+.details {
+  margin: 20px;
+}
+
+.detail-row {
+  margin-bottom: 5px;
+}
+
+.book-item {
+  width: 97vw;
+  margin-top: 20px;
+  background-color: rgba(243, 241, 241, 0.973);
+  padding: 20px;
+}
+.book-row {
+  width: 85%;
+}

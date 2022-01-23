@@ -1,0 +1,44 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-3 select-type">
+      <div class="select-component">
+        <mat-form-field appearance="fill">
+          <mat-label>Choose an option</mat-label>
+          <mat-select [(value)]="selectedType">
+            <mat-option value="book">Title</mat-option>
+            <mat-option value="author">Author</mat-option>
+            <mat-option value="publisher">Publisher</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-sm-5 search-bar-padding">
+      <form class="example-form">
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Type to search</mat-label>
+          <input type="text"
+                 placeholder="Pick one"
+                 aria-label="Type to search"
+                 matInput
+                 [formControl]="searchBooksCtrl"
+                 [(ngModel)]="selectedItem"
+                 [matAutocomplete]="auto">
+          <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            <mat-option *ngFor="let item of filteredItems" [value]="item.title">
+              {{item.title}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <br>
+        <ng-container *ngIf="errorMsg">
+          {{errorMsg}}
+        </ng-container>
+      </form>
+    </div>
+    <div class="col-sm-2 search-div">
+      <button mat-raised-button color="primary" class="search-btn" aria-label="Search">
+        <mat-icon>search</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
