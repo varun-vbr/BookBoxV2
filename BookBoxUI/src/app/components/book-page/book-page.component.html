@@ -1,0 +1,76 @@
+<app-header></app-header>
+<div class="container">
+
+<div class="row">
+<div class="container bookContainer col-sm-12">
+  <div class="row">
+      <div class="col-sm-2 bookImg">
+          <div class="d-flex justify-content-center">
+              <img alt="selectedBook" src="../../../assets/bookCovers/{{book.imageUrl}}" height="250" >
+          </div>
+
+      </div>
+      <div class="col-sm-6 detailsCol">
+        <div class="container">
+          <div class="row">
+            <h3 class="bookTitle">{{book.title}}</h3>
+        </div>
+         <div class="row detail-row">
+             <h5 class="bookLabel">By:</h5>
+             <span><a (click)="getSearchResults(book.author, 'author')" class="links">{{book.author}}</a></span>
+        </div>
+         <div class="row detail-row">
+             <h5 class="bookLabel">Publisher:</h5>
+             <span><a (click)="getSearchResults(book.publisher, 'publisher')" class="links">{{book.publisher}}</a></span>
+        </div>
+         <div class="row detail-row">
+             <h5 class="bookLabel">Category:</h5>
+             <span><a (click)="getCategoryBooks(book.categoryName)" class="links">{{book.categoryName}}</a></span>
+        </div>
+        </div>
+      </div>
+      <div class="col-sm-3 read-button-col">
+          <div>
+            <button mat-raised-button color="primary" (click)="readBook()" class="login-btn" aria-label="Read Now">Read Now</button>
+          </div>
+      </div>
+  </div>
+  <div class="row">
+      <div class="book-description">
+          <h4 class="bookLabel">Book Description</h4>
+          <p>{{book.description}}</p>
+      </div>
+  </div>
+  <div class="star-rating-div">
+  <div>
+      <p style="font-weight: bold; margin-bottom: 3px">Review this title:</p>
+      <textarea rows="5" cols="65" [(ngModel)]="addReviewText" placeholder="Optionally write a few words about this title."></textarea>
+      <div style="margin-top: 10px;margin-bottom: 7px;margin-left: 251px; width:50%">
+        <button mat-raised-button (click)="postReview()" [disabled]="addReviewText.length == 0"  color="primary" style="margin-left: 98px;" aria-label="Read Now">Submit Review</button>
+      </div>
+      </div>
+  </div>
+  <div class="dialog-separator">
+  </div>
+  <div class="user-review-div">
+    <h4>Reviews By Other Book Box Members.</h4>
+    <div class="user-rating-container">
+      <div class="user-review-div-2" *ngIf="reviews.length==0">
+        <h4>Be the first to write a review.</h4>
+      </div>
+    <div *ngFor="let review of reviews" class="user-rating">
+        <div class="review-comment">{{review.review}}</div>
+        <p>By {{review.username}} on {{review.reviewDate | date : 'medium'}}</p>
+    </div>
+    </div>
+    <!--<div class="user-rating-container-small" ng-if="!strecth">
+    <div ng-repeat="review in reviews" class="user-rating">
+        <star-rating max="5" rating-value="review.rating" read-only="true" style="margin-bottom: 3px"></star-rating>
+        <div class="review-comment">{{review.reviewComment}}</div>
+        <p>By {{review.user.name}} on {{review.reviewDate}}</p>
+    </div>
+    </div> -->
+  </div>
+</div>
+</div>
+</div>

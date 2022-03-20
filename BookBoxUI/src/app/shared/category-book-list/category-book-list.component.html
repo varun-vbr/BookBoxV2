@@ -1,0 +1,38 @@
+<app-header></app-header>
+<div class="container">
+  <div class="row">
+  <div class="col-sm-12">
+      <h2 class="title"><span>
+        Categories:<button mat-button [matMenuTriggerFor]="categories"><span class="menu-button">{{categoryDetails[0].categoryName}}</span><mat-icon>arrow_drop_down</mat-icon></button>
+        <mat-menu #categories="matMenu">
+            <button mat-menu-item (click)="getCategoryDetails(1)">Action and Adventure</button>
+            <button mat-menu-item (click)="getCategoryDetails(2)">Autobiographies and Biographies</button>
+            <button mat-menu-item (click)="getCategoryDetails(3)">Business and Economics</button>
+            <button mat-menu-item (click)="getCategoryDetails(4)">Computing</button>
+            <button mat-menu-item (click)="getCategoryDetails(5)">Healthy Living</button>
+            <button mat-menu-item (click)="getCategoryDetails(6)">Humour</button>
+            <button mat-menu-item (click)="getCategoryDetails(7)">Personal Development</button>
+            <button mat-menu-item (click)="getCategoryDetails(8)">Romance</button>
+            <button mat-menu-item (click)="getCategoryDetails(9)">Science and Technology</button>
+            <button mat-menu-item (click)="getCategoryDetails(10)">Science Fiction</button>
+            <button mat-menu-item (click)="getCategoryDetails(11)">Sports</button>
+            <button mat-menu-item (click)="getCategoryDetails(12)">Travel</button>
+        </mat-menu>
+      </span></h2>
+      <div class="row">
+      <div *ngFor="let item of categoryDetails" class="col-sm-2 col-xs-2 col-md-2 col-lg-2 category-book">
+        <a (click) = "gotoBookPage(item)">
+                  <div class="d-flex justify-content-center category-img">
+                       <img alt="category1" src="../../../assets/bookCovers/{{item.imageUrl}}" width="160" height="240">
+                  </div>
+                  <div class="thumbnail-title" matTooltip="{{item.title}}">
+                      <span class="category-title truncate">{{item.title}}</span>
+                  </div>
+
+              </a>
+      </div>
+      </div>
+
+    </div>
+   </div>
+  </div>

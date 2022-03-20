@@ -1,0 +1,135 @@
+.bookContainer {
+  margin-top: 20px;
+  background: #f2f2f2;
+}
+.bookTitle {
+  font-weight: bold;
+}
+.bookLabel {
+  color: #666666;
+  margin-bottom: 2px;
+}
+.bookImg {
+  margin: 20px;
+}
+.detailsCol {
+  margin-top: 25px;
+}
+.readButton {
+  color: white;
+  width: 280px;
+}
+.read-button-col {
+  margin: 20px;
+}
+.book-description {
+  margin-bottom: 20px;
+  margin-left: 35px;
+  margin-right: 20px;
+}
+.links {
+  color: #fa551b;
+}
+.detail-row {
+  margin-bottom: 15px;
+}
+.links:hover {
+  color: #fa551b;
+}
+
+.review {
+  margin-top: 5px;
+  margin-left: 5px;
+  display: inline-block;
+}
+
+.login-btn {
+  width: 285px;
+  height: 50px;
+}
+
+.dialog-content {
+  width: 520px;
+  height: 500px;
+  overflow-y: hidden;
+}
+
+.dialog-header {
+  margin: 9px 20px 15px 20px;
+  font-weight: normal;
+  color: #666666;
+}
+
+.dialog-avg-rating {
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 3px;
+  font-weight: normal;
+  color: #949494;
+}
+
+.dialog-avg-rating span {
+  margin-left: 3px;
+}
+
+.star-rating-div {
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 10px;
+}
+
+.review-count {
+  color: #949494;
+  margin-left: 0px;
+}
+
+.rating-separator {
+  margin-left: 5px;
+  margin-right: 5px;
+  border-left: 1px solid #949494;
+}
+
+.dialog-separator {
+  margin-left: 20px;
+  margin-right: 20px;
+  border-bottom: 1px solid #949494;
+}
+
+.user-review-div {
+  margin: 7px 20px 20px 20px;
+}
+
+.user-review-div h6 {
+  font-weight: normal;
+  color: #949494;
+}
+
+.user-rating-container {
+  height: 332px;
+  overflow-y: scroll;
+}
+.user-rating-container-small {
+  height: 123px;
+  overflow-y: scroll;
+}
+
+.user-rating {
+  margin-top: 15px;
+  margin-bottom: 7px;
+}
+.user-rating p {
+  color: #949494;
+  font-size: small;
+}
+.review-comment {
+  margin-bottom: 2px;
+}
+
+.user-review-div-2 {
+  margin: 7px 20px 3px 20px;
+}
+
+.user-review-div-2 h6 {
+  font-weight: normal;
+  color: #949494;
+}

@@ -1,0 +1,26 @@
+.select-type {
+  padding-left: 13%;
+}
+.mat-form-field {
+  width: 123%;
+}
+
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+.search-btn {
+  height: 52px;
+}
+.search-bar-padding {
+  padding-right: 0%;
+}
+.search-div {
+  padding-left: 0%;
+}

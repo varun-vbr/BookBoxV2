@@ -1,0 +1,18 @@
+<div class="container header-color">
+  <div class="row">
+    <div class="col-sm-2">
+      <a (click) = "gotohomePage()"><img src="../../../assets/icons/Book Box.png" class="left-div-logo"></a>
+    </div>
+    <div class="col-sm-7 center-div">
+      <app-searchbar></app-searchbar>
+    </div>
+    <div class="col-sm-3">
+      <a (click)="gotoLoginPage()" *ngIf="!userName"class="right-div-anchor">Sign in</a>
+      <button *ngIf="userName" mat-button [matMenuTriggerFor]="account" class="right-div-anchor"><mat-icon>account_circle</mat-icon><span style="margin-left: 5px;" >{{userName}}</span><mat-icon>arrow_drop_down</mat-icon></button>
+        <mat-menu #account="matMenu">
+            <button mat-menu-item (click)="gotoreadhistory()"><mat-icon>history</mat-icon>History</button>
+            <button mat-menu-item (click)="signOut()"><mat-icon>exit_to_app</mat-icon>Sign-out</button>
+        </mat-menu>
+    </div>
+  </div>
+</div>

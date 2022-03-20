@@ -1,0 +1,34 @@
+<app-header></app-header>
+<div *ngIf="type" class = "empty-books">
+  Books By: {{type}}
+</div>
+<div *ngIf="books.length == 0" class = "empty-books">
+  No Results Found. Try fewer words.
+</div>
+<div class="container book-item" *ngFor="let item of books">
+  <div class="row book-row">
+    <div class="col-sm-2">
+      <img src="../../../assets/bookCovers/{{item.imageUrl}}" width="200" height="260"alt="">
+    </div>
+    <div class="col-sm-10">
+      <div class="container details">
+        <div class="row detail-row">
+          <a (click)="gotoBookPage(item)" class = "title">{{item.title}}</a>
+          <button *ngIf="allowdelete" mat-raised-button color="primary" style="margin-right: 20px;float:right" aria-label="Delete">Delete</button>
+        </div>
+        <div class="row detail-row">
+          <a (click)="getSearchResults(item.author, 'author')" class = "author">{{item.author}}</a>
+        </div>
+        <div class="row detail-row">
+          <a (click)="getSearchResults(item.publisher, 'publisher')" class = "publisher">{{item.publisher}}</a>
+        </div>
+        <div class="row detail-row">
+          <a (click)="getCategoryBooks(item.categoryName)" class = "publisher">{{item.categoryName}}</a>
+        </div>
+        <div class="row detail-row" style="margin-right:5px;">
+          {{item.description}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

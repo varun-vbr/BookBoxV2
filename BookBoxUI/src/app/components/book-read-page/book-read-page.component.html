@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="row" style="border-bottom: 1px dotted rgb(88, 86, 86);">
+    <div class="col-sm-3" style="border-right: 1px dotted rgb(88, 86, 86); height: 130px">
+      <button (click)="back()" mat-icon-button color="primary"><mat-icon style="font-size:xx-large">arrow_back</mat-icon></button>
+        <div align="center" style="margin-top:-10px; padding-bottom: 20px;">
+          <button (click)="getPreviousPage()"  mat-icon-button color="primary">
+            <mat-icon style="font-size:xx-large">skip_previous</mat-icon>
+          </button>
+         </div>
+    </div>
+    <div class="col-sm-6" style="height: 130px">
+        <div align="center" style="margin-top:20px;padding-bottom: 0px;">
+              <h2 style="width:500px;word-wrap:break-word;">{{bookContent.title}}</h2>
+       </div>
+    </div>
+    <div class="col-sm-3" style="border-left: 1px dotted rgb(88, 86, 86);height: 130px;">
+      <div align="center" style="margin-top:27px;padding-bottom: 20px;">
+        <button (click)="getNextPage()" mat-icon-button color="primary">
+          <mat-icon style="font-size:xx-large">skip_next</mat-icon>
+        </button>
+       </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12" style="margin-top:20px;font-size:20px;line-height:30px;">
+      {{bookContent.content}}
+    </div>
+  </div>
+</div>
