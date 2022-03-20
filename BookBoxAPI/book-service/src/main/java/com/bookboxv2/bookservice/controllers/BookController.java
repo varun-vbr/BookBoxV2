@@ -11,6 +11,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/books")
+@CrossOrigin(origins = "*")
 public class BookController {
 
     @Autowired

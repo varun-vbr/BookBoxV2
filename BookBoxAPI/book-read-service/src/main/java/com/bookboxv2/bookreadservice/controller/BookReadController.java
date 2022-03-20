@@ -10,6 +10,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/reader")
+@CrossOrigin(origins = "*")
 public class BookReadController {
 
     @Autowired
@@ -27,7 +28,7 @@ public class BookReadController {
 
     @GetMapping(path = "/book/suggestion/{userId}")
     @ResponseBody
-    public List<BookRead> getTopUserReads(@PathVariable long userId){ return bookReadService.getTopUserReads(userId); }
+    public List<Map<String, Object>> getTopUserReads(@PathVariable long userId){ return bookReadService.getTopUserReads(userId); }
 
     @PutMapping(path = "/book")
     public void closeBook(@RequestBody Map<String, Object> request){ bookReadService.closeBook(request);}

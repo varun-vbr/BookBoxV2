@@ -12,6 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/bookSearch")
+@CrossOrigin(origins = "*")
 public class SuggestionController {
     @Autowired
     private SuggestionService suggestionService;
@@ -58,4 +59,7 @@ public class SuggestionController {
     @ResponseBody
     public Object search(@RequestParam("type") String type, @RequestParam("key") String key){ return suggestionService.performSearch( type, key); }
 
+    @GetMapping(path = "/searchResults")
+    @ResponseBody
+    public Object getSearchResults(@RequestParam("type") String type, @RequestParam("key") String key){ return suggestionService.getSearchResults( type, key); }
 }

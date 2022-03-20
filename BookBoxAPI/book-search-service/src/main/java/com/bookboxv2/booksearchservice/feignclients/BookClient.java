@@ -32,4 +32,11 @@ public interface BookClient {
     @GetMapping(path = "/publisher/name/{publisherName}")
     public List<Map<String, Object>> getPublishersByTitle(@PathVariable String publisherName);
 
+    @GetMapping(path = "/books/author/name/{authorName}")
+    public List<Map<String, Object>> getBooksByAuthorName(@PathVariable String authorName);
+
+    @GetMapping(path = "/books/publisher/name/{publisherName}")
+    public List<Map<String, Object>> getBooksByPublisherName(@PathVariable String publisherName);
+
+
 }

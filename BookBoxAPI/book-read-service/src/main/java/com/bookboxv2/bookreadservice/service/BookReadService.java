@@ -1,6 +1,7 @@
 package com.bookboxv2.bookreadservice.service;
 
 import com.bookboxv2.bookreadservice.exceptions.AppError;
+import com.bookboxv2.bookreadservice.feignclients.BookClient;
 import com.bookboxv2.bookreadservice.models.BookRead;
 import com.bookboxv2.bookreadservice.repositories.BookReadRepository;
 import com.lowagie.text.pdf.PdfReader;
@@ -21,6 +22,9 @@ public class BookReadService {
 
     @Autowired
     private BookReadRepository bookReadRepository;
+    
+    @Autowired
+    private BookClient bookClient;
 
     public Map<String, Object> openBook(long bookId, long userId, String path){
         try{
@@ -54,6 +58,7 @@ public class BookReadService {
             PdfTextExtractor extractor = new PdfTextExtractor(reader);
                 page.put("content", extractor.getTextFromPage(pageToRead));
                 page.put("pageNumber", pageToRead);
+                page.put("totalPages", totalPages);
 
         } catch(Exception ex){
             throw new AppError(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value(), false);
@@ -65,9 +70,11 @@ public class BookReadService {
         Resource resource = new ClassPathResource(path);
         Map<String, Object> page = new HashMap<String, Object>();
         try (PdfReader reader = new PdfReader(resource.getInputStream())) {
+        	int totalPages = reader.getNumberOfPages();
             PdfTextExtractor extractor = new PdfTextExtractor(reader);
             page.put("content", extractor.getTextFromPage(pageNumber));
             page.put("pageNumber", pageNumber);
+            page.put("totalPages", totalPages);
         } catch(Exception ex){
             throw new AppError(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value(), false);
         }
@@ -112,17 +119,18 @@ public class BookReadService {
         }
     }
 
-    public List<BookRead> getTopUserReads(long userId){
-        List<BookRead> topReads = new ArrayList<BookRead>();
-        List<BookRead> allReads = bookReadRepository.findByUserIdOrderByProgressAsc(userId);
-        if(allReads.size() > 10){
-            for(int i = 0; i < 10; i++){
-                topReads.add(allReads.get(i));
+    public List<Map<String, Object>> getTopUserReads(long userId){
+    	try {
+    		List<BookRead> allReads = bookReadRepository.findByUserIdOrderByProgressAsc(userId);
+            List<Map<String, Object>> history = new ArrayList<Map<String, Object>>();
+            for(BookRead read : allReads) {
+            	history.add(bookClient.getBooksById(read.getBookId()));
             }
-            return topReads;
-        } else {
-            return allReads;
-        }
+            return history;
+    	} catch(Exception ex) {
+    		throw new AppError(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value(), false);
+    	}
+        
     }
 
 

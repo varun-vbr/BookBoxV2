@@ -8,7 +8,7 @@ const factory = require('./handlerFactory');
 const axios = require('axios');
 
 exports.protect = catchAsync(async (req, res, next) => {
-    const cookie = req.cookies.jwt;
+    const cookie = req.body.token;
     if(cookie){
         try{
             const response = await axios.get('http://localhost:3000/api/v1/users/auth/isLoggedIn', {
