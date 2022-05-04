@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registration-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: registration-service
+      tier: backend
+  template:
+    metadata: 
+      labels:
+        app: registration-service
+        tier: backend
+    spec: 
+      containers:
+        - name: registration-service
+          image: bookboxv2/registration-service:preprod
+          imagePullPolicy: Always

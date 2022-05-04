@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authentication-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authentication-service
+      tier: backend
+  template:
+    metadata: 
+      labels:
+        app: authentication-service
+        tier: backend
+    spec: 
+      containers:
+        - name: authentication-service
+          image: bookboxv2/authentication-service:preprod
+          imagePullPolicy: Always

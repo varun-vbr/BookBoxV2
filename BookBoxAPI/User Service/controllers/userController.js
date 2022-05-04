@@ -11,7 +11,7 @@ const axios = require('axios');
 exports.signup =  catchAsync(async (req, res, next) => {
     const newUser = await UserPref.create({pfdCategories : req.body.pfdCategories, wishList : req.body.wishList, playlists: req.body.playlists});
     try{
-       const response = await axios.post('http://localhost:3001/api/v1/users/register/signup', {
+       const response = await axios.post(`http://${process.env.REGISTRATION_SERVICE_SERVICE_HOST}:3001/api/v1/users/register/signup`, {
             data : {
                 userId : newUser.userId,
                 name : req.body.name ? req.body.name : req.body.data.name, 
@@ -64,14 +64,14 @@ exports.login =  catchAsync(async (req, res, next) => {
     let responseUserDetail = {};
     let responseUserAuth = {};    
     try{
-         responseUserDetail = await axios.get('http://localhost:3001/api/v1/users/register/user/'+req.body.email);
+         responseUserDetail = await axios.get(`http://${process.env.REGISTRATION_SERVICE_SERVICE_HOST}:3001/api/v1/users/register/user/`+req.body.email);
          if(responseUserDetail.status != 200) {
              return next(
                  new AppError('There was an error logging in', responseUserDetail.status)
              );
          }
          const userPrefs = await UserPref.findOne({userId : responseUserDetail.data.data.userDetail.userId}).populate('playlists');
-         responseUserAuth = await axios.post('http://localhost:3000/api/v1/users/auth/login', {
+         responseUserAuth = await axios.post(`http://${process.env.AUTHENTICATION_SERVICE_SERVICE_HOST}:3000/api/v1/users/auth/login`, {
             data : {
                 userId : responseUserDetail.data.data.userDetail.userId,
                 password : req.body.password
@@ -100,6 +100,7 @@ exports.login =  catchAsync(async (req, res, next) => {
            });
      } 
      catch(e){
+         console.log(e);
          return next(
              new AppError(e.response.data.message, e.response.data.error.statusCode)
          ); 
@@ -110,7 +111,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     const cookie = req.cookies.jwt;
     if(cookie){
         try{
-            const response = await axios.get('http://localhost:3000/api/v1/users/auth/isLoggedIn', {
+            const response = await axios.get(`http://${process.env.AUTHENTICATION_SERVICE_SERVICE_HOST}:3000/api/v1/users/auth/isLoggedIn`, {
                 headers: {
                     Cookie: "jwt=" + cookie + ";"
                 }
@@ -138,7 +139,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 exports.update = catchAsync(async (req, res, next) => {
     try{
-            response = await axios.patch('http://localhost:3001/api/v1/users/register/update',{
+            response = await axios.patch(`http://${process.env.REGISTRATION_SERVICE_SERVICE_HOST}:3001/api/v1/users/register/update`,{
                 data : {
                     planName : req.body.planName
                 },
@@ -164,7 +165,7 @@ exports.update = catchAsync(async (req, res, next) => {
 
   exports.logout = catchAsync(async (req, res, next) => {
     try{
-        const response = await axios.get('http://localhost:3000/api/v1/users/auth/logout', {
+        const response = await axios.get(`http://${process.env.AUTHENTICATION_SERVICE_SERVICE_HOST}:3000/api/v1/users/auth/logout`, {
                     headers: {
                         Cookie: req.cookies
                     }
@@ -190,7 +191,7 @@ exports.update = catchAsync(async (req, res, next) => {
 
   exports.updatePassword = catchAsync(async (req, res, next) => {
     try{
-        const response = await axios.patch('http://localhost:3000/api/v1/users/auth/updatePassword', {
+        const response = await axios.patch(`http://${process.env.AUTHENTICATION_SERVICE_SERVICE_HOST}:3000/api/v1/users/auth/updatePassword`, {
                     headers: {
                         Cookie: req.cookies
                     },
@@ -405,7 +406,7 @@ exports.update = catchAsync(async (req, res, next) => {
         if(!userPrefs){
           return next(new AppError('There are no users by this Id', 404));
         }
-        response = await axios.get('http://localhost:3001/api/v1/users/register/users/'+req.params.userId, {
+        response = await axios.get(`http://${process.env.REGISTRATION_SERVICE_SERVICE_HOST}:3001/api/v1/users/register/users/`+req.params.userId, {
             headers: {
                 Cookie: req.cookies.jwt                
             }

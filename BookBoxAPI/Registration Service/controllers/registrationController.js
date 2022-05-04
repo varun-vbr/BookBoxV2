@@ -21,7 +21,7 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
         
     if(cookie){
         try{
-            const response = await axios.get('http://localhost:3000/api/v1/users/auth/isLoggedIn', {
+            const response = await axios.get(`http://${process.env.AUTHENTICATION_SERVICE_SERVICE_HOST}:3000/api/v1/users/auth/isLoggedIn`, {
                 headers: {
                     Cookie: "jwt=" + cookie + ";"
                 }
@@ -53,7 +53,7 @@ exports.signup =  catchAsync(async (req, res, next) => {
     var response = {};
     try{    
         if(req.body.data.admin || req.body.data.root){
-            response = await axios.post('http://localhost:3000/api/v1/users/auth/admin', {
+            response = await axios.post(`http://${process.env.AUTHENTICATION_SERVICE_SERVICE_HOST}:3000/api/v1/users/auth/admin`, {
                 data : {
                         userId : req.body.data.userId,
                         password : req.body.data.password,
@@ -74,7 +74,7 @@ exports.signup =  catchAsync(async (req, res, next) => {
             }
         }
         else{
-            response = await axios.post('http://localhost:3000/api/v1/users/auth/signUp', {
+            response = await axios.post(`http://${process.env.AUTHENTICATION_SERVICE_SERVICE_HOST}:3000/api/v1/users/auth/signUp`, {
                 data : {
                     userId : req.body.data.userId,
                     password : req.body.data.password,
@@ -159,7 +159,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
         if(!userDetail){
           return next(new AppError('There are no users by this Id', 404));
         }
-        response = await axios.get('http://localhost:3000/api/v1/users/auth/user/'+req.params.userId, {
+        response = await axios.get(`http://${process.env.AUTHENTICATION_SERVICE_SERVICE_HOST}:3000/api/v1/users/auth/user/`+req.params.userId, {
             headers: {
                 Cookie: "jwt=" + req.headers.cookie + ";"                
             }
