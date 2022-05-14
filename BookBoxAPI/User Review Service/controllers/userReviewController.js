@@ -11,7 +11,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     const cookie = req.body.token;
     if(cookie){
         try{
-            const response = await axios.get('http://localhost:3000/api/v1/users/auth/isLoggedIn', {
+            const response = await axios.get(`http://${process.env.AUTHENTICATION_SERVICE_SERVICE_HOST}:3000/api/v1/users/auth/isLoggedIn`, {
                 headers: {
                     Cookie: "jwt=" + cookie + ";"
                 }

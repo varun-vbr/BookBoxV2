@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-review-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-review-service
+      tier: backend
+  template:
+    metadata: 
+      labels:
+        app: user-review-service
+        tier: backend
+    spec: 
+      containers:
+        - name: user-review-service
+          image: bookboxv2/user-review-service:preprod
+          imagePullPolicy: Always

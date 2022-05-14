@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-read-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: book-read-service
+      tier: backend
+  template:
+    metadata: 
+      labels:
+        app: book-read-service
+        tier: backend
+    spec: 
+      containers:
+        - name: book-read-service
+          image: bookboxv2/book-read-service:preprod
+          imagePullPolicy: Always

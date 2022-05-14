@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 import java.util.Map;
 
-@FeignClient(name = "books", url = "http://localhost:8080")
+@FeignClient(name = "book-service", url = "${BOOK_SERVICE_SERVICE_HOST:http://localhost}:8080")
 public interface BookClient {
 
     @GetMapping(path = "/books/{bookId}")

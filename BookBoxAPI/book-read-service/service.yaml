@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-read-service
+spec:
+  selector: 
+    app: book-read-service
+  ports:
+    - protocol: 'TCP'
+      port: 8082
+      targetPort: 8082
+    # - protocol: 'TCP'
+    #   port: 443
+    #   targetPort: 443
+  type: LoadBalancer

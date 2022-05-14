@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-search-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: book-search-service
+      tier: backend
+  template:
+    metadata: 
+      labels:
+        app: book-search-service
+        tier: backend
+    spec: 
+      containers:
+        - name: book-search-service
+          image: bookboxv2/book-search-service:preprod
+          imagePullPolicy: Always
