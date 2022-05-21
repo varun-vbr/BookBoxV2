@@ -29,7 +29,7 @@ export class BookPageService{
   }
 
   getReviews(bookId: number){
-    return this.http.get('http://localhost:3003/api/v1/users/review/' + bookId);
+    return this.http.get('http://userreviewserviceapi.loca.lt/api/v1/users/review/' + bookId, { headers:new HttpHeaders().append('Bypass-Tunnel-Reminder', 'true')});
   }
 
   postReview(review : {userId: number,
@@ -39,7 +39,6 @@ export class BookPageService{
   rating: number,
   review: string,
   token:string}){
-    let headers = new HttpHeaders;
-    return this.http.post('http://localhost:3003/api/v1/users/review', review);
+    return this.http.post('http://userreviewserviceapi.loca.lt/api/v1/users/review', review, { headers: new HttpHeaders().append('Bypass-Tunnel-Reminder', 'true')});
   }
 }

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserDetails } from '../../../app/models/userDetails.model'
 
@@ -12,7 +12,7 @@ export class LoginService {
   }
 
   login(email: string, password: string){
-     return this.http.post('http://localhost:3002/api/v1/user/login', {email, password})
+     return this.http.post('http://userserviceapi.loca.lt/api/v1/user/login', {email, password}, {headers:new HttpHeaders().append('Bypass-Tunnel-Reminder', 'true')})
   }
 
 }

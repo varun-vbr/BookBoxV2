@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Book } from '../../models/book.model';
 
 @Injectable()
@@ -16,7 +16,7 @@ constructor(private http: HttpClient) {
 }
 
 getBookContent(){
-  this.http.get("http://localhost:8082/reader/book?bookId=" + this.bookId + "&userId=" + this.userId + "&path=" + this.bookPath).
+  this.http.get("http://bookreadserviceapi.loca.lt/reader/book?bookId=" + this.bookId + "&userId=" + this.userId + "&path=" + this.bookPath, {headers:new HttpHeaders().append('Bypass-Tunnel-Reminder', 'true')}).
   subscribe((content: any) => {
     this.bookContent.pageNumber = content.pageNumber;
     this.bookContent.content = content.content;
@@ -25,7 +25,7 @@ getBookContent(){
 }
 
 getPage(pageNumber: number){
-  this.http.get("http://localhost:8082/reader/page?path=" + this.bookPath + "&pageNumber=" + pageNumber).subscribe((content: any) => {
+  this.http.get("http://bookreadserviceapi.loca.lt/reader/page?path=" + this.bookPath + "&pageNumber=" + pageNumber, {headers:new HttpHeaders().append('Bypass-Tunnel-Reminder', 'true')}).subscribe((content: any) => {
     this.bookContent.pageNumber = content.pageNumber;
     this.bookContent.content = content.content;
     this.bookContent.totalPages = content.totalPages;

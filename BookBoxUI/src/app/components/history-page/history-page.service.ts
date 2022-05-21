@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Book } from 'src/app/models/book.model';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class HistoryService{
   }
 
   fetchUserHistory(userId:number):void {
-    this.http.get('http://localhost:8082/reader/book/suggestion/' + userId).
+    this.http.get('http://bookreadserviceapi.loca.lt/reader/book/suggestion/' + userId, {headers:new HttpHeaders().append('Bypass-Tunnel-Reminder', 'true')}).
      subscribe((books: any) => {
        console.log(books)
        this.history.length = 0;

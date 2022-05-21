@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Book } from '../../models/book.model';
 
@@ -12,7 +12,7 @@ export class SearchService{
   }
 
   search(query: string, type: string){
-     this.http.get('http://localhost:8081/bookSearch/searchResults?type=' + type +'&key='+ query).
+     this.http.get('http://booksearchserviceapi.loca.lt/bookSearch/searchResults?type=' + type +'&key='+ query, {headers:new HttpHeaders().append('Bypass-Tunnel-Reminder', 'true')}).
      subscribe((books: any) => {
        console.log(books)
        this.searchResults.length = 0;

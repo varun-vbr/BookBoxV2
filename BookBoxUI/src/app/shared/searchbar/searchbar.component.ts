@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {Observable} from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { debounceTime, tap, switchMap, finalize, distinctUntilChanged, filter, map, startWith } from 'rxjs/operators';
 import { SearchService } from './searchbar.service';
 import { Router } from '@angular/router';
@@ -22,6 +22,7 @@ export class SearchbarComponent implements OnInit {
   minLengthTerm = 3;
   selectedItem: any = "";
   selectedType: any = "book";
+  ;
   constructor(
     private http: HttpClient, private searchService: SearchService, private router: Router
   ) { }
@@ -47,8 +48,9 @@ export class SearchbarComponent implements OnInit {
           this.errorMsg = "";
           this.filteredItems = [];
           this.isLoading = true;
+
         }),
-        switchMap(value => this.http.get('http://localhost:8081/bookSearch/search?type='+this.selectedType+'&key='+value)
+        switchMap(value => this.http.get('http://booksearchserviceapi.loca.lt/bookSearch/search?type='+this.selectedType+'&key='+value, {headers:new HttpHeaders().append('Bypass-Tunnel-Reminder', 'true')})
           .pipe(
             finalize(() => {
               this.isLoading = false

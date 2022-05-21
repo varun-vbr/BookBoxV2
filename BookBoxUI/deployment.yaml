@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookbox-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bookbox-ui
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: bookbox-ui
+        tier: backend
+    spec:
+      containers:
+        - name: bookbox-ui
+          image: bookboxv2/bookbox-ui:preprod
+          imagePullPolicy: Always

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Book } from '../../models/book.model';
 
@@ -13,7 +13,7 @@ export class CategoryListingService{
   }
 
   listBooks(categoryId: number){
-     this.http.get('http://localhost:8080/books/category/' + categoryId).
+     this.http.get('https://bookserviceapi.loca.lt/books/category/' + categoryId, {headers:new HttpHeaders().append('Bypass-Tunnel-Reminder', 'true')}).
      subscribe((books: any) => {
        console.log(books)
        this.categoryBookList.length = 0;
