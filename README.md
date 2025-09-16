@@ -1,6 +1,3 @@
-Here’s a suggested README for **BookBoxV2**. You can adjust any sections (features, installation, etc.) based on what’s accurate for your project.
-
----
 
 # BookBoxV2
 
